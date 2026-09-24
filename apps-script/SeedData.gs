@@ -56,6 +56,7 @@ var SEED_DATA_ = {
       order: 1,
       label: '第一天',
       theme: '神經類',
+      date: '2026-10-09',
       questionIds: ['q24', 'q25', 'q26', 'q27', 'q28', 'q35', 'q36'],
     },
     {
@@ -64,6 +65,7 @@ var SEED_DATA_ = {
       order: 2,
       label: '第二天',
       theme: '頸肩與上肢',
+      date: '2026-10-11',
       questionIds: ['q01', 'q16', 'q17', 'q18', 'q19', 'q37', 'q38'],
     },
     {
@@ -72,6 +74,7 @@ var SEED_DATA_ = {
       order: 3,
       label: '第三天',
       theme: '腰臀、髖',
+      date: '2026-10-18',
       questionIds: ['q02', 'q03', 'q04', 'q05', 'q06', 'q07', 'q13', 'q15'],
     },
     {
@@ -80,6 +83,7 @@ var SEED_DATA_ = {
       order: 4,
       label: '第四天',
       theme: '特殊題',
+      date: '2026-11-01',
       questionIds: ['q22', 'q23', 'q29', 'q30', 'q31', 'q32', 'q33', 'q34', 'q39', 'q40'],
     },
     {
@@ -88,6 +92,7 @@ var SEED_DATA_ = {
       order: 5,
       label: '第五天',
       theme: '補充題',
+      date: '2026-11-08',
       questionIds: ['q08', 'q09', 'q10', 'q11', 'q12', 'q14', 'q20', 'q21'],
     },
   ],

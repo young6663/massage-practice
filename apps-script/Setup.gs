@@ -7,7 +7,7 @@ var SHEET_DEFS_ = [
   { name: 'study_groups', headers: ['group_id', 'name', 'status', 'created_at'] },
   { name: 'group_members', headers: ['group_id', 'participant_id', 'role', 'status', 'joined_at'] },
   { name: 'questions', headers: ['question_id', 'number', 'title'] },
-  { name: 'practice_days', headers: ['day_id', 'group_id', 'sort_order', 'label', 'theme'] },
+  { name: 'practice_days', headers: ['day_id', 'group_id', 'sort_order', 'label', 'theme', 'date'] },
   { name: 'day_questions', headers: ['day_id', 'question_id', 'sort_order'] },
   { name: 'question_integrations', headers: ['question_id', 'system', 'external_id', 'url'] },
   { name: 'settings', headers: ['group_id', 'key', 'value'] },
@@ -27,7 +27,7 @@ var SHEET_DEFS_ = [
 // 這幾欄一律用純文字格式，避免 Google 試算表自動把它們轉成日期／數字，改變原本的字串內容
 // （PROJECT_SPEC §3：practiced_at 要存 'YYYY-MM-DD' 純文字；時間戳記也一起用純文字比較保險）。
 // 使用者輸入的文字欄位也設純文字，讓 = 開頭的內容永遠不會被當成公式（sanitizeCell_ 為第二道防護）
-var PLAIN_TEXT_COLUMNS_ = ['created_at', 'joined_at', 'practiced_at', 'canceled_at', 'voided_at', 'display_name', 'stuck_point', 'note', 'weakness_codes'];
+var PLAIN_TEXT_COLUMNS_ = ['created_at', 'joined_at', 'practiced_at', 'canceled_at', 'voided_at', 'display_name', 'stuck_point', 'note', 'weakness_codes', 'date'];
 
 function onOpen() {
   SpreadsheetApp.getUi()
@@ -88,7 +88,7 @@ function setupSheets() {
   seedIfEmpty_(
     'practice_days',
     SEED_DATA_.practiceDays.map(function (d) {
-      return { day_id: d.id, group_id: d.groupId, sort_order: d.order, label: d.label, theme: d.theme };
+      return { day_id: d.id, group_id: d.groupId, sort_order: d.order, label: d.label, theme: d.theme, date: d.date || '' };
     })
   );
 

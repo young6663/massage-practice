@@ -39,7 +39,15 @@ function handleGetBootstrap_(payload, groupRow) {
         .map(function (x) {
           return x.question_id;
         });
-      return { id: r.day_id, groupId: r.group_id, order: Number(r.sort_order), label: r.label, theme: r.theme, questionIds: qIds };
+      return {
+        id: r.day_id,
+        groupId: r.group_id,
+        order: Number(r.sort_order),
+        label: r.label,
+        theme: r.theme,
+        date: toDateString_(r.date),
+        questionIds: qIds,
+      };
     })
     .sort(function (a, b) {
       return a.order - b.order;

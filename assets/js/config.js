@@ -1,6 +1,6 @@
 // 環境設定：切換 local／appsScript 後端。頁面與 api 層都只從這裡讀設定。
 // 版本號與日期：每次修改網站都要更新，畫面最下方會顯示。
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.2.0';
 export const APP_VERSION_DATE = '2026-09-24';
 
 export const config = Object.freeze({

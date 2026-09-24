@@ -2,6 +2,7 @@ import { test, assert, assertEqual } from './harness.js';
 import {
   todayInTaipei,
   formatDateDisplay,
+  formatDateWithWeekday,
   daysBetween,
   questionStats,
   pendingSelections,
@@ -13,6 +14,7 @@ import {
   questionsByStatus,
   dayForQuestion,
   filterAllQuestions,
+  orderDaysForToday,
 } from '../assets/js/domain/progress.js';
 
 const Q = [
@@ -372,4 +374,77 @@ test('drawQuestion：題庫大於 1 題時不會抽到上一題', () => {
 test('drawQuestion：lastId 不在題庫中時仍可正常抽題', () => {
   const result = drawQuestion(Q, 'q99', () => 0.99);
   assert(Q.some((q) => q.id === result.id));
+});
+
+// ---------- formatDateWithWeekday ----------
+
+test('formatDateWithWeekday：格式為「M月D日 星期X」', () => {
+  assertEqual(formatDateWithWeekday('2026-10-09'), '10月9日 星期五');
+  assertEqual(formatDateWithWeekday('2026-10-11'), '10月11日 星期日');
+});
+
+test('formatDateWithWeekday：空字串回傳空字串', () => {
+  assertEqual(formatDateWithWeekday(''), '');
+  assertEqual(formatDateWithWeekday(null), '');
+});
+
+// ---------- orderDaysForToday（首頁五天選題總覽排序） ----------
+
+const DAYS_WITH_DATE = [
+  { id: 'd1', order: 1, label: '第一天', theme: '神經類', date: '2026-10-09', questionIds: [] },
+  { id: 'd2', order: 2, label: '第二天', theme: '頸肩與上肢', date: '2026-10-11', questionIds: [] },
+  { id: 'd3', order: 3, label: '第三天', theme: '腰臀、髖', date: '2026-10-18', questionIds: [] },
+  { id: 'd4', order: 4, label: '第四天', theme: '特殊題', date: '2026-11-01', questionIds: [] },
+  { id: 'd5', order: 5, label: '第五天', theme: '補充題', date: '2026-11-08', questionIds: [] },
+];
+
+test('orderDaysForToday：今天剛好是上課日 → 該天最前，kind 為 today', () => {
+  const result = orderDaysForToday(DAYS_WITH_DATE, '2026-10-09');
+  assertEqual(result.featured, { id: 'd1', kind: 'today' });
+  assertEqual(result.days.map((d) => d.id), ['d1', 'd2', 'd3', 'd4', 'd5']);
+});
+
+test('orderDaysForToday：介於兩個上課日之間 → 下一次上課日最前，kind 為 next', () => {
+  const result = orderDaysForToday(DAYS_WITH_DATE, '2026-10-15');
+  assertEqual(result.featured, { id: 'd3', kind: 'next' });
+  assertEqual(result.days.map((d) => d.id), ['d3', 'd1', 'd2', 'd4', 'd5']);
+});
+
+test('orderDaysForToday：在第一個上課日之前 → 第一天最前，kind 為 next', () => {
+  const result = orderDaysForToday(DAYS_WITH_DATE, '2026-09-24');
+  assertEqual(result.featured, { id: 'd1', kind: 'next' });
+  assertEqual(result.days.map((d) => d.id), ['d1', 'd2', 'd3', 'd4', 'd5']);
+});
+
+test('orderDaysForToday：所有上課日都已過去 → 不標記，維持固定順序', () => {
+  const result = orderDaysForToday(DAYS_WITH_DATE, '2026-11-09');
+  assertEqual(result.featured, null);
+  assertEqual(result.days.map((d) => d.id), ['d1', 'd2', 'd3', 'd4', 'd5']);
+});
+
+test('orderDaysForToday：缺日期的天永遠不會被標記，且維持固定順序中的位置', () => {
+  const days = [
+    { id: 'd1', order: 1, label: '第一天', theme: '神經類', date: '2026-10-09', questionIds: [] },
+    { id: 'd2', order: 2, label: '第二天', theme: '頸肩與上肢', date: '', questionIds: [] },
+    { id: 'd3', order: 3, label: '第三天', theme: '腰臀、髖', date: '2026-10-18', questionIds: [] },
+  ];
+  // 今天介於 d1、d3 之間，d2 沒有日期，不該被選為 next，應該跳到 d3。
+  const between = orderDaysForToday(days, '2026-10-10');
+  assertEqual(between.featured, { id: 'd3', kind: 'next' });
+  assertEqual(between.days.map((d) => d.id), ['d3', 'd1', 'd2']);
+
+  // 沒有任何一天日期等於今天或在今天之後時，缺日期的天也不會被標記，維持固定順序。
+  const after = orderDaysForToday(days, '2026-11-01');
+  assertEqual(after.featured, null);
+  assertEqual(after.days.map((d) => d.id), ['d1', 'd2', 'd3']);
+});
+
+test('orderDaysForToday：全部天數都沒有日期 → 不標記，維持固定順序', () => {
+  const days = [
+    { id: 'd1', order: 1, label: '第一天', theme: '神經類', questionIds: [] },
+    { id: 'd2', order: 2, label: '第二天', theme: '頸肩與上肢', questionIds: [] },
+  ];
+  const result = orderDaysForToday(days, '2026-10-09');
+  assertEqual(result.featured, null);
+  assertEqual(result.days.map((d) => d.id), ['d1', 'd2']);
 });

@@ -1,6 +1,45 @@
 # 進度
 
-最後更新：2026-09-23
+最後更新：2026-09-24
+
+## v1.2.0（2026-09-24）題組加上真實上課日期，首頁標記「今天／下一次上課」
+- `practice_days` 新增 `date`（`YYYY-MM-DD`）欄位：d1=2026-10-09、d2=2026-10-11、d3=2026-10-18、d4=2026-11-01、d5=2026-11-08。
+  `data/seed.json`、`apps-script/SeedData.gs` 同步加上；`apps-script/Setup.gs` 的 `practice_days` 表頭新增
+  `date`（放最後一欄）並加入 `PLAIN_TEXT_COLUMNS_`（避免 Google 試算表把日期字串自動轉成 Date 物件）、
+  `setupSheets()` 種子資料寫入時一併帶上；`apps-script/Handlers.gs` 的 `handleGetBootstrap_` 回傳 `days` 時
+  用既有的 `toDateString_()` 正規化（Date 物件→`yyyy-MM-dd` 字串、空值→`''`），前端不管拿到哪種都能處理。
+- `assets/js/domain/progress.js` 新增兩個純函式（見 PROJECT_SPEC §4.7）：`formatDateWithWeekday(dateStr)`
+  （"10月9日 星期五"，星期幾用 `Date.UTC` 算，不依賴系統時區）、`orderDaysForToday(days, today)`（依 `date`
+  決定哪一天要排最前面＋標記 kind:'today'｜'next'；沒有 `date` 的天永遠不會被標記；所有日期都過去或都沒有
+  `date` 時回傳 `featured:null`，維持依 `order` 的固定順序）。`tests/progress.test.js` 新增 8 項測試，涵蓋
+  上課當天／兩堂課之間／第一堂課之前／全部過去／缺日期五種情境。
+- `assets/js/pages/home.js` 改用 `orderDaysForToday()` 排序，該天 `h2` 依情況加「今天：」或「下一次上課：」
+  前綴，每天標題後方用 `formatDateWithWeekday()` 加註日期，例如「今天：第一天 神經類（10月9日 星期五）」。
+- 測試：`tests/unit.html` 57 項全過（原 49 項＋新增 8 項）。local 模式下用瀏覽器實測：真實系統日期
+  2026-09-24（尚未到第一堂課）首頁正確顯示「下一次上課：第一天 神經類（10月9日 星期五）」排最前；依
+  acceptance 要求的做法（`orderDaysForToday` 接受 `today` 參數）暫時把 `home.js` 呼叫處的 `today` 改成
+  `'2026-10-09'`，重新整理後正確顯示「今天：第一天 神經類（10月9日 星期五）」排最前，驗完立刻改回
+  `todayInTaipei()` 並重新整理確認畫面恢復；day.html 未受影響；320px 寬無水平捲動。測完已把 `config.js`
+  的 `backend` 改回 `'appsScript'`（`git diff assets/js/config.js` 只有版本號 1.0.0→1.2.0 的差異）。
+
+## v1.1.0（2026-09-24）首頁改版：五天選題總覽
+- 首頁主要內容改為「五天選題總覽」：依固定順序 d1→d5（不是「今天優先」）逐天列出 `h2` 標題＋
+  「你已選 X 題（建議 N 題）」，天底下列出該天**全部**題目（含沒人選的），每題 `h3`＋你已選擇／未選擇＋
+  幾人選擇（含姓名）＋一顆「選擇／取消選擇」按鈕，可直接在首頁操作，行為與 `day.html` 完全一致（同一輪次、
+  同一 API、同一忙碌與錯誤處理）。
+- 移除首頁的「下一步」「我的選題」「我的弱題」「所有題組」區塊與「今天」單日區塊（與新的「固定五天」結構
+  互斥，不再需要特別標示今天）；次要功能移到頁尾新的 `h2「其他功能」`：40題總表、我的弱題、模擬抽題、
+  群組、經穴背誦教練連結（原本的「當日選題」逐天連結因總覽已涵蓋而省略）。
+- 新增共用模組 `assets/js/ui/questionSelection.js`（`qLabel`／`findMySelection`／`peerNamesFor`／
+  `mergeDaySelections`／`renderToggleButton`／`handleToggle`），把選題狀態顯示與選擇／取消的 API 呼叫、
+  忙碌保護、狀態播報邏輯抽成共用函式；`day.js` 一併改用，行為不變（已用瀏覽器實測確認 day.html 選題正常、
+  單元測試 49/49 全過）。
+- 起因：使用者（視障，用螢幕報讀器）回饋首頁「下一步」只提一題，誤以為兩題選題只存了一題；本次改版讓
+  「看每天大家選了誰、選自己的題」變成首頁唯一主線，不再靠「下一步」單句猜使用者要做什麼。
+- 測試：local 模式下用瀏覽器實測——首頁選/取消第25題、重新整理仍保留、焦點留在按鈕、`#status` 只播一句
+  「已選擇第25題 正中神經麻痺。第一天已選 3 題。」；320px 寬無水平捲動；day.html 重新整理後選題狀態與
+  首頁一致；`tests/unit.html` 49 項全過。測完已把 `config.js` 的 `backend` 改回 `'appsScript'`（`git diff`
+  只有版本號變動）。
 
 ## 目前階段
 **Phase 6 無障礙審查的自動化修正已完成**（fullstack-builder / Sonnet）→ 下一步：使用者本人依 `apps-script/DEPLOY.md` 完成 Phase 5 部署、

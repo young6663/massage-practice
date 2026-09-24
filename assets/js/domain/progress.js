@@ -26,6 +26,17 @@ export function formatDateDisplay(dateStr, todayStr = todayInTaipei()) {
   return y === todayYear ? monthDay : `${y}年${monthDay}`;
 }
 
+const WEEKDAY_NAMES_ = ['日', '一', '二', '三', '四', '五', '六'];
+
+// "10月9日 星期五"（首頁題組總覽的日期顯示，見 §4.7）。用 Date.UTC 算星期幾，
+// 避免用當地時區建構 Date 造成日期字串跨日、星期幾算錯。
+export function formatDateWithWeekday(dateStr) {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const weekdayIdx = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  return `${m}月${d}日 星期${WEEKDAY_NAMES_[weekdayIdx]}`;
+}
+
 // 兩個 YYYY-MM-DD 之間相差幾天（later - earlier）。
 export function daysBetween(earlierStr, laterStr) {
   const a = new Date(`${earlierStr}T00:00:00Z`);
@@ -175,6 +186,38 @@ export function nextStep({ hasIdentity, remaining, currentDay, pending, weak, qu
     return { type: 'reviewWeak', message: `複習弱題：第${q.number}題${q.title}`, questionId: q.id };
   }
   return { type: 'draw', message: '試試模擬抽題' };
+}
+
+// ---------- §4.7 首頁「五天選題總覽」排序與標記 ----------
+// 依 days 的 date（YYYY-MM-DD，可能沒有）決定哪一天要排到最前面：
+// - 今天剛好是某天的上課日 → 該天最前，kind:'today'。
+// - 不是上課日，但還有未來的上課日 → 最近的一個未來上課日排最前，kind:'next'。
+// - 所有上課日都已過去、或全部天數都沒有 date → 不特別標記，維持依 order 的固定順序。
+// 沒有 date 的天永遠不會被標記為 featured，但仍照 order 出現在清單裡。
+
+export function orderDaysForToday(days, today = todayInTaipei()) {
+  const sorted = (days || []).slice().sort((a, b) => a.order - b.order);
+  const withDate = sorted.filter((d) => d.date);
+
+  const todayDay = withDate.find((d) => d.date === today);
+  let featured = null;
+  if (todayDay) {
+    featured = { id: todayDay.id, kind: 'today' };
+  } else {
+    const future = withDate
+      .filter((d) => d.date > today)
+      .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+    if (future.length > 0) {
+      featured = { id: future[0].id, kind: 'next' };
+    }
+  }
+
+  if (!featured) {
+    return { days: sorted, featured: null };
+  }
+  const featuredDay = sorted.find((d) => d.id === featured.id);
+  const rest = sorted.filter((d) => d.id !== featured.id);
+  return { days: [featuredDay, ...rest], featured };
 }
 
 // ---------- 依狀態查看（weak.html「依狀態查看」、all.html 篩選共用） ----------
