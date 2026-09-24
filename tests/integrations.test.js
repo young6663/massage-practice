@@ -1,10 +1,10 @@
 import { test, assert, assertEqual } from './harness.js';
 import { massageExamLink, acupointCoachLink, massageExamLinkText } from '../assets/js/integrations.js';
 
-test('massageExamLink：沒有對應資料時回首頁，isDeepLink 為 false', () => {
+test('massageExamLink：沒有對應資料時用題號組深層連結 #topic-27', () => {
   const link = massageExamLink({ id: 'q27', number: 27 }, []);
-  assertEqual(link.isDeepLink, false);
-  assert(link.href.includes('massage-exam'), 'href 應指向術科練習網站');
+  assertEqual(link.isDeepLink, true);
+  assertEqual(link.href, 'https://young6663.github.io/massage-exam/#topic-27');
 });
 
 test('massageExamLink：有 questionIntegrations 對應網址時使用該網址並標記 deepLink', () => {
@@ -17,7 +17,7 @@ test('massageExamLink：有 questionIntegrations 對應網址時使用該網址�
 test('massageExamLink：其他題目的對應資料不影響本題', () => {
   const integrations = [{ questionId: 'q01', system: 'massageExam', url: 'https://example.test/q01' }];
   const link = massageExamLink({ id: 'q27', number: 27 }, integrations);
-  assertEqual(link.isDeepLink, false);
+  assertEqual(link.href, 'https://young6663.github.io/massage-exam/#topic-27');
 });
 
 test('acupointCoachLink：回傳經穴背誦教練首頁', () => {

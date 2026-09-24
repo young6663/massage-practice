@@ -5,8 +5,8 @@ export const EXTERNAL_SYSTEMS = Object.freeze({
   massageExam: Object.freeze({
     name: '乙級術科練習',
     homeUrl: 'https://young6663.github.io/massage-exam/#main-content',
-    // 術科網站支援 #topic-{id} 後改為 'https://young6663.github.io/massage-exam/#topic-{id}'
-    deepLinkTemplate: null,
+    // 術科網站自 v53（2026-09-25）起支援 #topic-{id}：直接選好該題並進入練習畫面（一位數題號也可）。
+    deepLinkTemplate: 'https://young6663.github.io/massage-exam/#topic-{id}',
   }),
   acupointCoach: Object.freeze({
     name: '經穴背誦教練',
