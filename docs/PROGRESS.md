@@ -1,6 +1,44 @@
 # 進度
 
-最後更新：2026-09-24
+最後更新：2026-09-25
+
+## v1.4.0（2026-09-25）首頁改版：五天進度工作台（切換器＋每題三個直達動作）
+- 起因：使用者（機構同仁）要求首頁不要再五天疊一起顯示，改成「五天切換器，切過去只看那一天」，
+  且每題要能直接連去術科練習、直接新增紀錄、直接看到練習次數與最近熟悉度，不用再跳去 40 題總表或單題紀錄頁。
+- `index.html`：`#home-content` 裡 `#overview-round` 與 `#days-overview` 之間新增
+  `<div id="day-switcher" class="day-switcher" role="group" aria-label="切換練習天數">`（原生 `<button>`
+  五顆，不是連結、不是 ARIA tablist）。
+- `assets/js/pages/home.js` 改版：
+  - 五顆切換按鈕固定依 `day.order` 1→5 排序（不套用 `orderDaysForToday` 的「今天優先」排序）；
+    只借 `orderDaysForToday()` 的 `featured` 判斷結果決定**初始顯示哪一天**：今天有練習→今天，
+    否則→下一次練習，兩者都沒有（全部天數已過或都沒有 `date`）→顯示最後一天（依 `order`，即第五天）。
+  - 五個 `<section class="day-block">` 全部一次建好，只有目前選中的那天 `hidden=false`，其餘 `hidden=true`；
+    按鈕文字沿用既有 `dayHeadingText()`（含「今天：」／「下一次練習：」前綴＋日期），目前選中的那顆
+    額外加可見文字後綴「（目前顯示）」＋`aria-current="true"`（語意給報讀器、文字後綴給看不清底色的低視能使用者，
+    不只靠顏色，見 ACCESSIBILITY §8）。
+  - 點按鈕：切換各 `day-block` 的 `hidden`、更新按鈕文字與 `aria-current`、把焦點移到新顯示區塊的
+    `<h2 id="day-heading-{dayId}" tabindex="-1">`（不呼叫 `announce()`，避免同一句話畫面文字與
+    `#status` live region 各播一次，見 ACCESSIBILITY §4 鐵則1／鐵則4）。
+  - 每題卡片新增三個元素（`renderQuestionLi`）：「開啟乙級術科練習」連結（`massageExamLink()`／
+    `massageExamLinkText()`，跟 `question.js` 同一套，不重寫判斷邏輯；深層連結已支援，不加
+    exam-note 提醒段落）、「新增練習紀錄」連結（`record.html?q={id}&from=direct`，沿用
+    `record.js`／`question.js` 既有的 `from=direct` 命名）、練習次數／最近熟悉度小提示（重用
+    `domain/progress.js` 的 `questionStats()` 與 `constants.js` 的 `familiarityLabel()`，未練過顯示
+    「尚未練過」）。三者放進同一個 `.button-row`（選擇／取消選擇按鈕＋兩個 `link-action` 連結）。
+- `assets/css/base.css` 新增 `.day-switcher`／`.day-switch-button`／`.day-switch-button[aria-current="true"]`：
+  白底主色框線（未選中）／實心主色（選中，跟既有主要按鈕同色，對比沿用 §8 已計算的 8.8:1，未新增顏色）。
+- `assets/js/config.js`：`APP_VERSION` 1.3.0 → 1.4.0（`APP_VERSION_DATE` 已是今天不變）。
+- 測試：local 模式下用瀏覽器實測（Claude 內建瀏覽器）——選好身份「云云」後首頁預設顯示「下一次練習：
+  第一天」（系統日期 2026-09-25，在第一堂課 10/9 之前），切到「第三天」後只有第三天的題目顯示、
+  其餘 4 個 `day-block` 皆 `hidden=true`、`document.activeElement` 確認焦點落在第三天 `h2`、`#status`
+  維持空字串（沒有重複播報）；每題「開啟乙級術科練習」連結網址確認為 `…/massage-exam/#topic-{題號}`，
+  「新增練習紀錄」連結確認為 `record.html?q={id}&from=direct`；在第三天原地選題／取消選題，行為與改版前一致
+  （`#status` 正確播報、按鈕文字就地更新）；320px 寬 `document.body.scrollWidth` 與 `clientWidth` 皆 320，
+  無水平捲動；注入 axe-core 4.10.2 檢查 0 violations；`tests/unit.html` 57 項全過（沿用既有 57 項，
+  本次未新增純函式，未改 `domain/progress.js`／`ui/questionSelection.js`／`integrations.js`，day.html
+  等其他頁面行為不受影響）。測完已把 `config.js` 的 `backend` 從測試用的 `'local'` 改回 `'appsScript'`
+  （`diff` 只有版本號差異）。
+- 未驗證：真人 NVDA／VoiceOver／TalkBack 實測本次新增的切換器與三個題卡連結（留給下次 Phase 6 手動驗證一併做）。
 
 ## v1.2.0（2026-09-24）題組加上真實練習日期，首頁標記「今天／下一次練習」
 - `practice_days` 新增 `date`（`YYYY-MM-DD`）欄位：d1=2026-10-09、d2=2026-10-11、d3=2026-10-18、d4=2026-11-01、d5=2026-11-08。

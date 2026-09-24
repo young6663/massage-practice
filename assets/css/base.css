@@ -541,6 +541,35 @@ thead th {
   margin-block: 0.5rem;
 }
 
+/* ---------- 五天切換（首頁，ACCESSIBILITY 鐵則3：原生 hidden 切換，不用 ARIA tablist） ---------- */
+.day-switcher {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-block: 1rem;
+}
+
+.day-switch-button {
+  background: #ffffff;
+  color: #0a4a8f;
+  border: 2px solid #0a4a8f;
+  text-align: left;
+  width: 100%;
+  max-width: 30rem;
+}
+
+.day-switch-button:hover {
+  background: #f0f4f9;
+}
+
+/* 目前顯示的那天：實心主色（語意上 aria-current="true" 給報讀器；
+   底色＋可見文字「（目前顯示）」給低視能使用者，不只靠顏色區分）。 */
+.day-switch-button[aria-current="true"] {
+  background: #0a4a8f;
+  color: #ffffff;
+  font-weight: 700;
+}
+
 /* ---------- 分區區塊 ---------- */
 section {
   margin-block: 1.5rem;
