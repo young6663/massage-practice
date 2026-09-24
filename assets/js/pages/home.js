@@ -126,7 +126,8 @@ async function init() {
     bootstrap = await getBootstrap();
   } catch (e) {
     hideLoading();
-    showError('資料載入失敗，請重新整理頁面再試一次。');
+    const reason = e && e.message ? `原因：${e.message}` : '請重新整理頁面再試一次。';
+    showError(`資料載入失敗。${reason}`);
     return;
   }
 

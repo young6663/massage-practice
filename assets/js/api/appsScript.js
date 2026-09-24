@@ -7,7 +7,11 @@
 import { config } from '../config.js';
 import { getStoredAccessCode, clearIdentity } from '../ui/session.js';
 
-const TIMEOUT_MS = 20000;
+// Apps Script 閒置一陣子後第一次被呼叫要「冷啟動」，偶爾超過 20 秒，所以放寬到 45 秒。
+const TIMEOUT_MS = 45000;
+// 讀取資料（getBootstrap）遇到連線類錯誤時自動重試的次數與間隔；寫入動作不自動重試，避免重複寫入。
+const BOOTSTRAP_RETRIES = 2;
+const RETRY_DELAY_MS = 1500;
 
 function fail(code, message) {
   const err = { ok: false, code, message };
@@ -73,7 +77,15 @@ async function callAction(action, payload, explicitAccessCode) {
 // ---------- API（與 docs/PROJECT_SPEC.md §7、api/local.js 相同介面） ----------
 
 export async function getBootstrap() {
-  return callAction('getBootstrap', {});
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await callAction('getBootstrap', {});
+    } catch (err) {
+      const retryable = err && (err.code === 'network_timeout' || err.code === 'network_error');
+      if (!retryable || attempt >= BOOTSTRAP_RETRIES) throw err;
+      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+    }
+  }
 }
 
 export async function verifyAccess(accessCode) {
