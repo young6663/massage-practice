@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>單元測試｜乙級上岸練習</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 48rem; margin: 1rem auto; padding: 0 1rem; }
+  li { margin-block: 0.15rem; }
+</style>
+</head>
+<body>
+<h1>單元測試結果</h1>
+<div id="results"><p>執行中…</p></div>
+<script type="module">
+  import { run } from './harness.js';
+  import './progress.test.js';
+  import './integrations.test.js';
+  run('results');
+</script>
+</body>
+</html>

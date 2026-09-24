@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title id="page-title-tag">新增練習紀錄｜乙級上岸練習</title>
+<link rel="stylesheet" href="assets/css/base.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <p class="site-name">乙級上岸練習</p>
+  <p class="whoami">目前身份：<span id="whoami-name">尚未選擇</span>｜<a href="who.html" class="link-action">切換<span class="vh">身份</span></a></p>
+  <nav class="main-nav" aria-label="主要導覽">
+    <ul>
+      <li><a href="index.html">首頁</a></li>
+      <li><a href="all.html">40題總表</a></li>
+      <li><a href="weak.html">我的弱題</a></li>
+      <li><a href="draw.html">模擬抽題</a></li>
+      <li><a href="group.html">群組</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <h1 id="page-heading">新增練習紀錄</h1>
+  <p id="status" class="status" role="status"></p>
+  <p id="loading" class="field-hint">資料載入中…</p>
+  <div id="error" class="error" role="alert"></div>
+  <div id="error-summary" class="error-summary" role="alert" tabindex="-1" hidden>
+    <p>有 <span id="error-count">1</span> 個問題：</p>
+    <ul id="error-list"></ul>
+  </div>
+
+  <div id="no-identity-notice" hidden>
+    <p>你還沒有選擇身份，請先<a href="who.html">選擇你是誰</a>，才能留下練習紀錄。</p>
+  </div>
+
+  <div id="record-content" hidden>
+    <form id="record-form" novalidate>
+      <fieldset>
+        <legend id="familiarity-legend">熟悉程度（必填）<span id="familiarity-error" class="field-error"></span></legend>
+        <ul class="option-list" id="familiarity-options"></ul>
+      </fieldset>
+
+      <fieldset>
+        <legend>這次的弱點（可複選）</legend>
+        <ul class="option-list" id="weakness-options"></ul>
+      </fieldset>
+
+      <label for="stuck-point">這次卡在哪裡？</label>
+      <textarea id="stuck-point" name="stuckPoint" maxlength="1000"></textarea>
+      <p id="stuck-point-error" class="field-error" hidden></p>
+
+      <label for="note">備註</label>
+      <textarea id="note" name="note" maxlength="1000"></textarea>
+      <p id="note-error" class="field-error" hidden></p>
+
+      <label for="practiced-at">練習日期</label>
+      <input type="date" id="practiced-at" name="practicedAt" />
+      <p id="practiced-at-error" class="field-error" hidden></p>
+
+      <div class="button-row">
+        <button type="submit" id="submit-button">儲存練習紀錄</button>
+      </div>
+    </form>
+  </div>
+</main>
+<script type="module" src="assets/js/pages/record.js"></script>
+</body>
+</html>

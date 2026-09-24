@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>模擬抽題｜乙級上岸練習</title>
+<link rel="stylesheet" href="assets/css/base.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <p class="site-name">乙級上岸練習</p>
+  <p class="whoami">目前身份：<span id="whoami-name">尚未選擇</span>｜<a href="who.html" class="link-action">切換<span class="vh">身份</span></a></p>
+  <nav class="main-nav" aria-label="主要導覽">
+    <ul>
+      <li><a href="index.html">首頁</a></li>
+      <li><a href="all.html">40題總表</a></li>
+      <li><a href="weak.html">我的弱題</a></li>
+      <li><a href="draw.html" aria-current="page">模擬抽題</a></li>
+      <li><a href="group.html">群組</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <h1>模擬抽題</h1>
+  <p id="status" class="status" role="status"></p>
+  <p id="loading" class="field-hint">資料載入中…</p>
+  <div id="error" class="error" role="alert"></div>
+
+  <div id="no-identity-notice" hidden>
+    <p>你還沒有選擇身份，請先<a href="who.html">選擇你是誰</a>，才能模擬抽題。</p>
+  </div>
+
+  <div id="draw-content" hidden>
+    <form id="draw-form" novalidate>
+      <fieldset>
+        <legend>抽題範圍</legend>
+        <ul class="option-list">
+          <li><label><input type="radio" name="scope" value="all" checked /> 全部40題</label></li>
+          <li><label><input type="radio" name="scope" value="day" /> 某一天</label></li>
+          <li><label><input type="radio" name="scope" value="weak" /> 我的弱題</label></li>
+          <li><label><input type="radio" name="scope" value="unpracticed" /> 尚未練習</label></li>
+        </ul>
+      </fieldset>
+
+      <label for="draw-day-select">選擇題組（範圍選「某一天」時使用）</label>
+      <select id="draw-day-select"></select>
+
+      <div class="button-row">
+        <button type="submit" id="draw-button">抽題</button>
+      </div>
+    </form>
+
+    <section id="result-section" hidden>
+      <h2>抽題結果</h2>
+      <p id="exam-note" class="field-hint" hidden>術科網站目前只能開首頁，請在該網站自行選題。</p>
+      <div id="result-content"></div>
+    </section>
+  </div>
+</main>
+<script type="module" src="assets/js/pages/draw.js"></script>
+</body>
+</html>

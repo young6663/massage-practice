@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>選擇身份｜乙級上岸練習</title>
+<link rel="stylesheet" href="assets/css/base.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <p class="site-name">乙級上岸練習</p>
+  <nav class="main-nav" aria-label="主要導覽">
+    <ul>
+      <li><a href="index.html">首頁</a></li>
+      <li><a href="all.html">40題總表</a></li>
+      <li><a href="weak.html">我的弱題</a></li>
+      <li><a href="draw.html">模擬抽題</a></li>
+      <li><a href="group.html">群組</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <h1>選擇身份</h1>
+  <p id="status" class="status" role="status"></p>
+  <p id="loading" class="field-hint">資料載入中…</p>
+  <div id="error" class="error" role="alert"></div>
+
+  <section id="access-section">
+    <h2>群組通行碼</h2>
+    <p>第一次使用這台裝置時，請輸入同學告訴你的群組通行碼。之後不用再輸入。</p>
+    <form id="access-form" novalidate>
+      <label for="access-code">群組通行碼</label>
+      <input type="text" id="access-code" name="accessCode" autocomplete="off" inputmode="numeric" aria-describedby="access-code-error" />
+      <p id="access-code-error" class="field-error" hidden></p>
+      <div class="button-row">
+        <button type="submit">確認通行碼</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="identity-section" hidden>
+    <h2 id="identity-heading" tabindex="-1">選擇身份</h2>
+    <form id="identity-form" novalidate>
+      <fieldset>
+        <legend>你是誰？（必填）</legend>
+        <ul class="option-list" id="member-list"></ul>
+      </fieldset>
+      <div class="button-row">
+        <button type="submit">進入</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="new-participant-section" hidden>
+    <h2>名單沒有你？</h2>
+    <p>如果你是新加入的同學，可以直接加入練習群組。</p>
+    <form id="new-participant-form" novalidate>
+      <label for="display-name">顯示名稱</label>
+      <p class="field-hint" id="display-name-hint">輸入暱稱即可，不用真實姓名。</p>
+      <input type="text" id="display-name" name="displayName" aria-describedby="display-name-hint" />
+      <p id="display-name-error" class="field-error" hidden></p>
+      <div class="button-row">
+        <button type="submit">以新同學身分加入</button>
+      </div>
+    </form>
+  </section>
+</main>
+<script type="module" src="assets/js/pages/who.js"></script>
+</body>
+</html>

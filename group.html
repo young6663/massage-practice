@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>群組｜乙級上岸練習</title>
+<link rel="stylesheet" href="assets/css/base.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <p class="site-name">乙級上岸練習</p>
+  <p class="whoami">目前身份：<span id="whoami-name">尚未選擇</span>｜<a href="who.html" class="link-action">切換<span class="vh">身份</span></a></p>
+  <nav class="main-nav" aria-label="主要導覽">
+    <ul>
+      <li><a href="index.html">首頁</a></li>
+      <li><a href="all.html">40題總表</a></li>
+      <li><a href="weak.html">我的弱題</a></li>
+      <li><a href="draw.html">模擬抽題</a></li>
+      <li><a href="group.html" aria-current="page">群組</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <h1>群組</h1>
+  <p id="status" class="status" role="status"></p>
+  <p id="loading" class="field-hint">資料載入中…</p>
+  <div id="error" class="error" role="alert"></div>
+
+  <div id="no-identity-notice" hidden>
+    <p>你還沒有選擇身份，請先<a href="who.html">選擇你是誰</a>，才能管理群組。</p>
+  </div>
+
+  <div id="group-content" hidden>
+    <section id="members-section">
+      <h2>成員</h2>
+      <ul class="question-list" id="member-list"></ul>
+    </section>
+
+    <section id="add-participant-section">
+      <h2>新增同學</h2>
+      <form id="add-participant-form" novalidate>
+        <label for="new-display-name">顯示名稱</label>
+        <p class="field-hint" id="new-display-name-hint">輸入暱稱即可，不用真實姓名。</p>
+        <input type="text" id="new-display-name" aria-describedby="new-display-name-hint" />
+        <p id="new-display-name-error" class="field-error" hidden></p>
+        <div class="button-row">
+          <button type="submit">新增同學</button>
+        </div>
+        <p id="add-participant-result" class="success-text"></p>
+      </form>
+    </section>
+
+    <section id="today-day-section">
+      <h2>今天練哪個題組</h2>
+      <form id="today-day-form" novalidate>
+        <label for="today-day-select">今天題組</label>
+        <select id="today-day-select"></select>
+        <div class="button-row">
+          <button type="submit">儲存今天題組</button>
+        </div>
+        <p id="today-day-result" class="success-text"></p>
+      </form>
+    </section>
+
+    <section id="selection-limit-section">
+      <h2>建議每人選題數</h2>
+      <form id="selection-limit-form" novalidate>
+        <label for="selection-limit-select">建議每人選題數</label>
+        <select id="selection-limit-select">
+          <option value="1">1 題</option>
+          <option value="2">2 題</option>
+          <option value="3">3 題</option>
+          <option value="unlimited">不限</option>
+        </select>
+        <div class="button-row">
+          <button type="submit">儲存建議題數</button>
+        </div>
+        <p id="selection-limit-result" class="success-text"></p>
+      </form>
+    </section>
+
+    <section id="today-overview-section">
+      <h2 id="today-overview-heading">大家的選題</h2>
+      <div id="today-overview"></div>
+    </section>
+  </div>
+</main>
+<script type="module" src="assets/js/pages/group.js"></script>
+</body>
+</html>

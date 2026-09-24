@@ -1,0 +1,5 @@
+private/
+*.local.json
+.DS_Store
+Thumbs.db
+desktop.ini

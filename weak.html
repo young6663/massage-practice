@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>我的弱題｜乙級上岸練習</title>
+<link rel="stylesheet" href="assets/css/base.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <p class="site-name">乙級上岸練習</p>
+  <p class="whoami">目前身份：<span id="whoami-name">尚未選擇</span>｜<a href="who.html" class="link-action">切換<span class="vh">身份</span></a></p>
+  <nav class="main-nav" aria-label="主要導覽">
+    <ul>
+      <li><a href="index.html">首頁</a></li>
+      <li><a href="all.html">40題總表</a></li>
+      <li><a href="weak.html" aria-current="page">我的弱題</a></li>
+      <li><a href="draw.html">模擬抽題</a></li>
+      <li><a href="group.html">群組</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <h1>我的弱題</h1>
+  <p id="status" class="status" role="status"></p>
+  <p id="loading" class="field-hint">資料載入中…</p>
+  <div id="error" class="error" role="alert"></div>
+
+  <div id="no-identity-notice" hidden>
+    <p>你還沒有選擇身份，請先<a href="who.html">選擇你是誰</a>，才能看到你的弱題。</p>
+  </div>
+
+  <div id="weak-content" hidden>
+    <p id="exam-note" class="field-hint" hidden>術科網站目前只能開首頁，請在該網站自行選題。</p>
+
+    <section id="priority-section">
+      <h2>需要優先補強</h2>
+      <p id="priority-empty" hidden>目前沒有弱題。</p>
+      <ol class="question-list" id="priority-list"></ol>
+    </section>
+
+    <section id="unpracticed-section">
+      <h2>尚未練過</h2>
+      <p id="unpracticed-summary"></p>
+      <p id="unpracticed-link-wrap"></p>
+    </section>
+
+    <section id="status-filter-section">
+      <h2>依狀態查看</h2>
+      <label for="status-filter">選擇狀態</label>
+      <select id="status-filter">
+        <option value="" selected>請選擇狀態</option>
+        <option value="all">全部狀態</option>
+        <option value="unpracticed">尚未練過</option>
+        <option value="1">很不熟</option>
+        <option value="2">還要再練</option>
+        <option value="3">大致可以</option>
+        <option value="4">可以上場</option>
+      </select>
+      <p id="status-filter-summary"></p>
+      <ul class="question-list" id="status-filter-list"></ul>
+    </section>
+  </div>
+</main>
+<script type="module" src="assets/js/pages/weak.js"></script>
+</body>
+</html>

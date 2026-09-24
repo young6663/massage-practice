@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>40題總表｜乙級上岸練習</title>
+<link rel="stylesheet" href="assets/css/base.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <p class="site-name">乙級上岸練習</p>
+  <p class="whoami">目前身份：<span id="whoami-name">尚未選擇</span>｜<a href="who.html" class="link-action">切換<span class="vh">身份</span></a></p>
+  <nav class="main-nav" aria-label="主要導覽">
+    <ul>
+      <li><a href="index.html">首頁</a></li>
+      <li><a href="all.html" aria-current="page">40題總表</a></li>
+      <li><a href="weak.html">我的弱題</a></li>
+      <li><a href="draw.html">模擬抽題</a></li>
+      <li><a href="group.html">群組</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <h1>40題總表</h1>
+  <p id="status" class="status" role="status"></p>
+  <p id="loading" class="field-hint">資料載入中…</p>
+  <div id="error" class="error" role="alert"></div>
+
+  <div id="no-identity-notice" hidden>
+    <p>你還沒有選擇身份，請先<a href="who.html">選擇你是誰</a>，才能看到你的練習狀態。</p>
+  </div>
+
+  <div id="all-content" hidden>
+    <div class="filter-controls">
+      <div>
+        <label for="filter-status">狀態</label>
+        <select id="filter-status">
+          <option value="all">全部狀態</option>
+          <option value="unpracticed">尚未練過</option>
+          <option value="1">很不熟</option>
+          <option value="2">還要再練</option>
+          <option value="3">大致可以</option>
+          <option value="4">可以上場</option>
+        </select>
+      </div>
+      <div>
+        <label for="filter-day">第幾天</label>
+        <select id="filter-day">
+          <option value="all">全部題組</option>
+        </select>
+      </div>
+      <div>
+        <label for="filter-number">題號</label>
+        <input type="text" id="filter-number" inputmode="numeric" pattern="[0-9]*" maxlength="2" />
+      </div>
+    </div>
+
+    <div class="table-wrap" role="region" aria-label="40題總表" tabindex="0">
+      <table>
+        <caption id="table-caption"></caption>
+        <thead>
+          <tr>
+            <th scope="col">題目</th>
+            <th scope="col">題組</th>
+            <th scope="col">練習次數</th>
+            <th scope="col">最新熟悉程度</th>
+            <th scope="col">最後練習</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<script type="module" src="assets/js/pages/all.js"></script>
+</body>
+</html>

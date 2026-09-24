@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>API 契約測試｜乙級上岸練習（開發用）</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 48rem; margin: 1rem auto; padding: 0 1rem; }
+  li { margin-block: 0.15rem; }
+  .warning { border: 2px solid #a3161a; background: #fdecea; color: #7a1013; padding: 0.75rem 1rem; border-radius: 4px; }
+  .field-hint { color: #555; font-size: 0.9rem; }
+  button { padding: 0.4rem 1rem; }
+</style>
+</head>
+<body>
+<h1>API 契約測試</h1>
+<p>
+  這個頁面用同一組 API 呼叫測試 <code>local</code> 與 <code>appsScript</code> 兩個資料存取層，
+  確認回傳形狀與錯誤代碼一致（<code>docs/PROJECT_SPEC.md</code> §7）。開發用，不是給同學使用的頁面。
+</p>
+<p id="mode-line"></p>
+
+<div id="warning" class="warning" role="alert" hidden></div>
+
+<form id="run-form" hidden>
+  <label for="access-code-input">群組通行碼</label>
+  <p class="field-hint">跟同學用的通行碼一樣；用來驗證身份並讓測試同學能選題、留紀錄。</p>
+  <input type="text" id="access-code-input" autocomplete="off" />
+  <div>
+    <button type="submit">開始執行測試（會在真正的試算表寫入資料）</button>
+  </div>
+</form>
+
+<div id="results" role="status" aria-live="polite"><p>準備中…</p></div>
+
+<script type="module">
+  import { config } from '../assets/js/config.js';
+  import { runContractTests } from './contract.test.js';
+
+  const params = new URLSearchParams(window.location.search);
+  const backend = params.get('backend') === 'appsScript' ? 'appsScript' : 'local';
+
+  const modeLine = document.getElementById('mode-line');
+  const warning = document.getElementById('warning');
+  const runForm = document.getElementById('run-form');
+  const accessCodeInput = document.getElementById('access-code-input');
+  const results = document.getElementById('results');
+
+  modeLine.textContent = `目前測試對象：${backend}（用網址參數 ?backend=local 或 ?backend=appsScript 切換）`;
+
+  function renderResults(summaryText, rows) {
+    results.textContent = '';
+    const p = document.createElement('p');
+    p.id = 'summary';
+    p.textContent = summaryText;
+    results.appendChild(p);
+    const ul = document.createElement('ul');
+    for (const r of rows) {
+      const li = document.createElement('li');
+      const status = r.ok === true ? 'PASS' : r.ok === false ? 'FAIL' : '略過';
+      li.textContent = r.ok === false ? `${status} - ${r.name}：${r.error}` : `${status} - ${r.name}`;
+      li.style.color = r.ok === true ? '#1d5a2c' : r.ok === false ? '#a3161a' : '#7a5c00';
+      ul.appendChild(li);
+    }
+    results.appendChild(ul);
+  }
+
+  async function runAndRender(accessCode) {
+    results.textContent = '執行中…';
+    const { pass, fail, total, results: rows } = await runContractTests(backend, { accessCode });
+    const summary = `共 ${total} 項，通過 ${pass}，失敗 ${fail}`;
+    renderResults(summary, rows);
+    document.title = fail === 0 ? `PASS ${pass}｜API 契約測試` : `FAIL ${fail}｜API 契約測試`;
+  }
+
+  if (backend === 'appsScript') {
+    if (!config.appsScriptUrl) {
+      warning.hidden = false;
+      warning.textContent = 'assets/js/config.js 裡的 appsScriptUrl 還沒有設定，請先完成 Apps Script 部署（見 apps-script/DEPLOY.md）再回來測試。';
+      results.textContent = '尚未執行。';
+    } else {
+      warning.hidden = false;
+      warning.textContent =
+        `注意：這會對 ${config.appsScriptUrl} 執行真正的寫入操作，在你的 Google 試算表裡新增一位「測試同學」、` +
+        '寫入選題與練習紀錄。測試結束會把選題取消、練習紀錄作廢、測試同學標記為已退出（不會刪除列），' +
+        '但這些歷史紀錄仍會留在試算表裡，需要的話請自行到試算表刪除。請確認你了解這一點，再按下開始。';
+      runForm.hidden = false;
+      results.textContent = '尚未執行，請先輸入通行碼並按下開始。';
+    }
+  } else {
+    runAndRender();
+  }
+
+  runForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const button = runForm.querySelector('button[type="submit"]');
+    button.disabled = true;
+    try {
+      await runAndRender(accessCodeInput.value.trim());
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
