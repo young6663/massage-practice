@@ -398,25 +398,25 @@ const DAYS_WITH_DATE = [
   { id: 'd5', order: 5, label: '第五天', theme: '補充題', date: '2026-11-08', questionIds: [] },
 ];
 
-test('orderDaysForToday：今天剛好是上課日 → 該天最前，kind 為 today', () => {
+test('orderDaysForToday：今天剛好是練習日 → 該天最前，kind 為 today', () => {
   const result = orderDaysForToday(DAYS_WITH_DATE, '2026-10-09');
   assertEqual(result.featured, { id: 'd1', kind: 'today' });
   assertEqual(result.days.map((d) => d.id), ['d1', 'd2', 'd3', 'd4', 'd5']);
 });
 
-test('orderDaysForToday：介於兩個上課日之間 → 下一次上課日最前，kind 為 next', () => {
+test('orderDaysForToday：介於兩個練習日之間 → 下一次練習日最前，kind 為 next', () => {
   const result = orderDaysForToday(DAYS_WITH_DATE, '2026-10-15');
   assertEqual(result.featured, { id: 'd3', kind: 'next' });
   assertEqual(result.days.map((d) => d.id), ['d3', 'd1', 'd2', 'd4', 'd5']);
 });
 
-test('orderDaysForToday：在第一個上課日之前 → 第一天最前，kind 為 next', () => {
+test('orderDaysForToday：在第一個練習日之前 → 第一天最前，kind 為 next', () => {
   const result = orderDaysForToday(DAYS_WITH_DATE, '2026-09-24');
   assertEqual(result.featured, { id: 'd1', kind: 'next' });
   assertEqual(result.days.map((d) => d.id), ['d1', 'd2', 'd3', 'd4', 'd5']);
 });
 
-test('orderDaysForToday：所有上課日都已過去 → 不標記，維持固定順序', () => {
+test('orderDaysForToday：所有練習日都已過去 → 不標記，維持固定順序', () => {
   const result = orderDaysForToday(DAYS_WITH_DATE, '2026-11-09');
   assertEqual(result.featured, null);
   assertEqual(result.days.map((d) => d.id), ['d1', 'd2', 'd3', 'd4', 'd5']);

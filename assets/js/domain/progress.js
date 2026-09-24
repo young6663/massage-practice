@@ -190,9 +190,9 @@ export function nextStep({ hasIdentity, remaining, currentDay, pending, weak, qu
 
 // ---------- §4.7 首頁「五天選題總覽」排序與標記 ----------
 // 依 days 的 date（YYYY-MM-DD，可能沒有）決定哪一天要排到最前面：
-// - 今天剛好是某天的上課日 → 該天最前，kind:'today'。
-// - 不是上課日，但還有未來的上課日 → 最近的一個未來上課日排最前，kind:'next'。
-// - 所有上課日都已過去、或全部天數都沒有 date → 不特別標記，維持依 order 的固定順序。
+// - 今天剛好是某天的練習日 → 該天最前，kind:'today'。
+// - 不是練習日，但還有未來的練習日 → 最近的一個未來練習日排最前，kind:'next'。
+// - 所有練習日都已過去、或全部天數都沒有 date → 不特別標記，維持依 order 的固定順序。
 // 沒有 date 的天永遠不會被標記為 featured，但仍照 order 出現在清單裡。
 
 export function orderDaysForToday(days, today = todayInTaipei()) {

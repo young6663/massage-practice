@@ -2,7 +2,7 @@
 
 最後更新：2026-09-24
 
-## v1.2.0（2026-09-24）題組加上真實上課日期，首頁標記「今天／下一次上課」
+## v1.2.0（2026-09-24）題組加上真實練習日期，首頁標記「今天／下一次練習」
 - `practice_days` 新增 `date`（`YYYY-MM-DD`）欄位：d1=2026-10-09、d2=2026-10-11、d3=2026-10-18、d4=2026-11-01、d5=2026-11-08。
   `data/seed.json`、`apps-script/SeedData.gs` 同步加上；`apps-script/Setup.gs` 的 `practice_days` 表頭新增
   `date`（放最後一欄）並加入 `PLAIN_TEXT_COLUMNS_`（避免 Google 試算表把日期字串自動轉成 Date 物件）、
@@ -12,11 +12,11 @@
   （"10月9日 星期五"，星期幾用 `Date.UTC` 算，不依賴系統時區）、`orderDaysForToday(days, today)`（依 `date`
   決定哪一天要排最前面＋標記 kind:'today'｜'next'；沒有 `date` 的天永遠不會被標記；所有日期都過去或都沒有
   `date` 時回傳 `featured:null`，維持依 `order` 的固定順序）。`tests/progress.test.js` 新增 8 項測試，涵蓋
-  上課當天／兩堂課之間／第一堂課之前／全部過去／缺日期五種情境。
-- `assets/js/pages/home.js` 改用 `orderDaysForToday()` 排序，該天 `h2` 依情況加「今天：」或「下一次上課：」
+  練習當天／兩堂課之間／第一堂課之前／全部過去／缺日期五種情境。
+- `assets/js/pages/home.js` 改用 `orderDaysForToday()` 排序，該天 `h2` 依情況加「今天：」或「下一次練習：」
   前綴，每天標題後方用 `formatDateWithWeekday()` 加註日期，例如「今天：第一天 神經類（10月9日 星期五）」。
 - 測試：`tests/unit.html` 57 項全過（原 49 項＋新增 8 項）。local 模式下用瀏覽器實測：真實系統日期
-  2026-09-24（尚未到第一堂課）首頁正確顯示「下一次上課：第一天 神經類（10月9日 星期五）」排最前；依
+  2026-09-24（尚未到第一堂課）首頁正確顯示「下一次練習：第一天 神經類（10月9日 星期五）」排最前；依
   acceptance 要求的做法（`orderDaysForToday` 接受 `today` 參數）暫時把 `home.js` 呼叫處的 `today` 改成
   `'2026-10-09'`，重新整理後正確顯示「今天：第一天 神經類（10月9日 星期五）」排最前，驗完立刻改回
   `todayInTaipei()` 並重新整理確認畫面恢復；day.html 未受影響；320px 寬無水平捲動。測完已把 `config.js`

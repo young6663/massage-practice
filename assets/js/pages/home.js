@@ -86,11 +86,11 @@ async function onToggle(li, day, q) {
   });
 }
 
-// 「今天：」／「下一次上課：」前綴＋日期（10月9日 星期五），見 PROJECT_SPEC §4.7。
+// 「今天：」／「下一次練習：」前綴＋日期（10月9日 星期五），見 PROJECT_SPEC §4.7。
 function dayHeadingText(day, featured) {
   let prefix = '';
   if (featured && featured.id === day.id) {
-    prefix = featured.kind === 'today' ? '今天：' : '下一次上課：';
+    prefix = featured.kind === 'today' ? '今天：' : '下一次練習：';
   }
   const dateText = day.date ? `（${formatDateWithWeekday(day.date)}）` : '';
   return `${prefix}${day.label} ${day.theme}${dateText}`;
