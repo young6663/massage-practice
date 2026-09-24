@@ -33,6 +33,13 @@ header, nav {
   margin-inline: auto;
 }
 
+/* 版本號（由 ui/layout.js 加在每頁最下方；沿用內文顏色，不降對比） */
+.app-version {
+  max-width: 42rem;
+  margin: 2rem auto 0;
+  font-size: 1rem;
+}
+
 h1, h2, h3, h4 {
   font-weight: 700;
   line-height: 1.3;
